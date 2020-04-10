@@ -23,9 +23,17 @@ def prepare_driver():
 # Funtion to search for a list of hotels in a specific area
 def search_hotels(driver, location):
     """ Finds the sb-searchbox__input class and fills it with the location and search """
-    # Finds the input field
+    # Finds the input field and fill it
     input_search_field = driver.find_element_by_xpath("//*[@id='ss']")
     input_search_field.send_keys(location)
+
+    # Finds the search button and clicks it
+    input_submit_button = driver.find_element_by_class_name("sb-searchbox__button")
+    input_submit_button.click()
+
+    # Wait until search is complete
+    element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "sr_property_block_main_row")))
+    print('Hotels list found, search is beginning..')
 
 
 if __name__ == "__main__":
