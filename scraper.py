@@ -12,11 +12,12 @@ import re
 import string
 import time
 
+target = "https://booking.com"
 # Prepare webdriver
 # @returns Firefox webdriver
 def prepare_driver():
     driver = webdriver.Firefox()
-    driver.get("https://booking.com")
+    driver.get(target)
     element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ss")))
     return driver
 
@@ -33,15 +34,27 @@ def search_hotels(driver, location):
 
     # Wait until search is complete
     element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "sr_property_block_main_row")))
-    print('Hotels list found, search is beginning..')
+    print('Hotels list found, search is beginning...')
+
+# Function to scrap hotels details
+def scrap_hotels(driver, max_count):
+    """ Fetch details of each hotels from the list of hotels """
+    # Initialise empty lists for hotels data and urls
+    hotels_urls = list()
+    hotels_data = list()
+
+    for hotel in driver.find_elements_by_class_name('sr-hotel__title'):
+        url = hotel.find_element_by_class_name("hotel_name_link").get_attribute("href")
+        hotels_urls.append(url)
+    print(hotels_urls)
 
 
-if __name__ == "__main__":
-    """ Explicit Waits for selenium webdriver """
+if __name__ == '__main__':
     # take location input to fetch hotel reviews
     location = input('Enter location: ')
     try:
         driver = prepare_driver()
         search_hotels(driver, location)
+        scrap_hotels(driver, 20)
     finally:
         driver.quit()
