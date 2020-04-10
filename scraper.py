@@ -6,16 +6,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import Firefox
 import requests
-import bs4
+import bs4 as BeautifulSoup
 import json
 import re
 import string
 import time
+import platform
 
 target = "https://booking.com"
 # Prepare webdriver
 # @returns Firefox webdriver
-def prepare_driver():
+def prepare_driver(pf):
+
     driver = webdriver.Firefox()
     driver.get(target)
     element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ss")))
@@ -43,18 +45,43 @@ def scrap_hotels(driver, max_count):
     hotels_urls = list()
     hotels_data = list()
 
+    # Loop over the class name to find multiple elements in that page
+    # @returns List of urls
     for hotel in driver.find_elements_by_class_name('sr-hotel__title'):
         url = hotel.find_element_by_class_name("hotel_name_link").get_attribute("href")
         hotels_urls.append(url)
-    print(hotels_urls)
+    time.sleep(5)
 
+    # If count of hotels required is more than available in a single page, open the next page
+    # and append the details of hotels url to the list
+
+    check = 1
+    while(check == True):
+        # Initial counter to check to limit scrapingof hotels in a single page
+        counter = max_count - len(hotels_urls)
+        if max_count > len(hotels_urls):
+            # Find the Next page button button and click it
+            driver.find_element_by_class_name('paging-next').click()
+            time.sleep(3)
+            # Looping over and appending the hotels to the list hotels_url <= max_xount
+            for hotel in driver.find_elements_by_class_name('sr-hotel__title'):
+                if counter <= 0:
+                    check = -1
+                    break
+                else:
+                    counter -= 1
+                    new_url = hotel.find_element_by_class_name("hotel_name_link").get_attribute("href")
+                    hotels_urls.append(new_url)
+        else:
+            check = -1
 
 if __name__ == '__main__':
     # take location input to fetch hotel reviews
     location = input('Enter location: ')
     try:
-        driver = prepare_driver()
+        pf = platform.system()
+        driver = prepare_driver(pf)
         search_hotels(driver, location)
-        scrap_hotels(driver, 20)
+        scrap_hotels(driver, 70)
     finally:
         driver.quit()
