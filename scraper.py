@@ -74,6 +74,27 @@ def scrap_hotels(driver, max_count):
                     hotels_urls.append(new_url)
         else:
             check = -1
+    print(len(hotels_urls), "Hotel URL's scrapped successfully!")
+
+    # Once urls are fetched, loop over and fetch details of each hotel with that specific url
+    for i in range(0, len(hotels_urls), 1):
+        url_data = scrape_hotel_details(driver, hotels_urls[i])
+        # Check if we received any data for the url, and append it to the hotels_data list
+        if len(url_data) != 0:
+            hotels_data.append(url_data)
+        else:
+            print("No data received for the given url")
+
+    # Return the final hotels data list items
+    return hotels_data
+
+
+# Function to fetch Hotel details; reviews, name, location
+def scrape_hotel_details(driver, hotel_url):
+    """ Opens a hotel page, and scraps the data """
+    return [1,2]
+
+
 
 if __name__ == '__main__':
     # take location input to fetch hotel reviews
