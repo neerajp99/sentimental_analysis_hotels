@@ -137,7 +137,7 @@ def scrape_hotel_details(driver, hotel_url):
             hotel_details['breakdown_list'][rating.find_element_by_class_name('c-score-bar__title').text] = rating.find_element_by_class_name('c-score-bar__score').text
 
         # Fetch reviewer comments
-        final = get_hotel_reviews(driver, 100)
+        final = get_hotel_reviews(driver, 20)
 
         # Append the comments to the list
         hotel_details['comments'] = final
