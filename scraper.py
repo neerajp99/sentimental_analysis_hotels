@@ -76,7 +76,7 @@ def scrap_hotels(driver, max_count):
     print(len(hotels_urls), "Hotel URL's scrapped successfully!")
 
     # Once urls are fetched, loop over and fetch details of each hotel with that specific url
-    for i in range(2):
+    for i in range(0, len(hotels_urls), 1):
         print('Scraping details of Hotel: ', i)
         url_data = scrape_hotel_details(driver, hotels_urls[i])
         # Check if we received any data for the url, and append it to the hotels_data list
@@ -114,13 +114,13 @@ def scrape_hotel_details(driver, hotel_url):
 
         # Fetch hotel ratings
 
-        try:
-            hotel_details['rating'] = driver.find_element_by_class_name('bui-review-score__badge').text
-        except:
-            try:
-                hotel_details['rating'] = driver.find_element_by_class_name('bui-review-score--end').find_element_by_class_name('bui-review-score__badge').text
-            except:
-                hotel_details['rating'] = ""
+        # try:
+        #     hotel_details['rating'] = driver.find_element_by_class_name('bui-review-score__badge').text
+        # except:
+        #     try:
+        #         hotel_details['rating'] = driver.find_element_by_class_name('bui-review-score--end').find_element_by_class_name('bui-review-score__badge').text
+        #     except:
+        #         hotel_details['rating'] = ""
 
         # Fetch hotel ratings breakdown list
         hotel_details['breakdown_list'] = dict()
@@ -136,8 +136,14 @@ def scrape_hotel_details(driver, hotel_url):
         for rating in driver.find_elements_by_class_name('c-score-bar'):
             hotel_details['breakdown_list'][rating.find_element_by_class_name('c-score-bar__title').text] = rating.find_element_by_class_name('c-score-bar__score').text
 
+
+        try:
+            hotel_details['rating'] = driver.find_element_by_class_name('reviews_panel_header_score').find_element_by_class_name('review-score-widget').find_element_by_class_name('review-score-badge').text
+        except:
+            hotel_details['rating'] = ""
+
         # Fetch reviewer comments
-        final = get_hotel_reviews(driver, 20)
+        final = get_hotel_reviews(driver, 100)
 
         # Append the comments to the list
         hotel_details['comments'] = final
