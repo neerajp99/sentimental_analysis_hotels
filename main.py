@@ -1,19 +1,23 @@
 from collections import defaultdict, Counter
 import json
 import string
-from pathlib import pathfind
+from pathlib import Path
 import os
+from booking_data import hotel_data
 
 
 # Fetching the link to the json data
 # Path(__file__).parent.absolute() 
 current_path = str(Path().absolute())
-link_to_data = current_path + "/booking_data.json"
+# link_to_data = current_path + "/booking_data.json"
 
-# Reading json/csv file with all the data 
-with open(link_to_data) as f:
-	data_content = json.loads(fi.read())
+# # Reading json/csv file with all the data 
+# with open(link_to_data) as f:
+# 	data_content = json.loads(f.read())
 
+# print(hotel_data[0]['comments'])
+for i in hotel_data[0]['comments']:
+    print(i)
 
 stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
               "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
