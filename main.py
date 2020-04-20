@@ -3,31 +3,48 @@ import json
 import string
 from pathlib import Path
 import os
-from booking_data import hotel_data
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+import pandas as pd
+import numpy as np
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-
-# Fetching the link to the json data
+#Fetching the link to the json data
 # Path(__file__).parent.absolute() 
 current_path = str(Path().absolute())
-# link_to_data = current_path + "/booking_data.json"
+link_to_data = current_path + "/data/bangkok.json"
 
-# # Reading json/csv file with all the data 
-# with open(link_to_data) as f:
-# 	data_content = json.loads(f.read())
+#Reading json/csv file with all the data 
+with open(link_to_data) as f:
+  data_content = json.loads(f.read())
+for j in range(len(data_content)):
+    sums = 0
+    for i in range(1, 101, 1):
+        # print(data_content[0]['reviews']['R' + str(i)]['content'])
+        # print('\n\n')
+        current_review = data_content[j]['reviews']['R' + str(i)]['content']
+        # Convert any uppercase letter to lowercase
+        current_review = current_review.lower()
+        # Remove any special character from the review comments 
+        review_comments = current_review.translate(str.maketrans('', '', string.punctuation))
+        # Create tokenize words 
+        tokenized_reviews = word_tokenize(review_comments, "english")
+        #Removing the stop words from the comments 
+        final_review_comments = list() 
+        # Loop over the tokenized reviews, and append the non stop words 
+        for word in tokenized_reviews:
+            if word not in stopwords.words('english'):
+                final_review_comments.append(word)
+        # Function to count the sentiments of the given reviews for the hotel        
+        def analyse_sentiment(sentiment_text):
+            score = SentimentIntensityAnalyzer().polarity_scores(sentiment_text)
+            negative = score['neg']
+            positive = score['pos']
+            neutral = score['neu']
+            compound = score['compound']
+            # print(score)
+            return compound
 
-# print(hotel_data[0]['comments'])
-for i in hotel_data[0]['comments']:
-    print(i)
-
-stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
-              "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
-              "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
-              "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do",
-              "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
-              "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
-              "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again",
-              "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
-              "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
-              "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
+        total = analyse_sentiment(review_comments)
+        sums += abs(total)
+    print("Final Rating of the hotel: ", round(sums/10, 3))
