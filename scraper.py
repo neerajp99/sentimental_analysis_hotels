@@ -75,6 +75,7 @@ def scrap_hotels(driver, max_count):
             check = -1
     print(len(hotels_urls), "Hotel URL's scrapped successfully!")
 
+    break_counter = 0
     # Once urls are fetched, loop over and fetch details of each hotel with that specific url
     for i in range(0, len(hotels_urls), 1):
         print('Scraping details of Hotel: ', i)
@@ -82,8 +83,13 @@ def scrap_hotels(driver, max_count):
         # Check if we received any data for the url, and append it to the hotels_data list
         if url_data != 0:
             hotels_data.append(url_data)
+            break_counter += 1
+
         else:
             print("No data received for the given url")
+
+        if break_counter == 20:
+            break
 
     # Return the final hotels data list items
     return hotels_data
@@ -97,7 +103,7 @@ def scrape_hotel_details(driver, hotel_url):
     if driver == None:
         driver = prepare_driver(hotel_url)
     driver.get(hotel_url)
-    time.sleep(2)
+    time.sleep(5)
 
     try:
         # Initialise a details dictionary
@@ -130,7 +136,7 @@ def scrape_hotel_details(driver, hotel_url):
         new_url = new_link + "#tab-reviews"
         # print(new_url)
         driver.get(new_url)
-        time.sleep(8)
+        time.sleep(10)
 
         # Looping over the hotel hotel_ratings list to append each list item
         for rating in driver.find_elements_by_class_name('c-score-bar'):
@@ -250,7 +256,7 @@ def get_hotel_reviews(driver, max_review_count):
 if __name__ == '__main__':
     # take location input to fetch hotel reviews
     location = input('Enter location: ')
-    amount = int(input('Enter the number of hotels to be searched: '))
+    # amount = int(input('Enter the number of hotels to be searched: '))
     try:
         pf = platform.system()
         # Set the initial target path
@@ -260,10 +266,10 @@ if __name__ == '__main__':
         # Call the function to search for hotels list's
         search_hotels(driver, location)
         # Call the function to scrape the details of the above fetched hotels
-        final_hotels_data = scrap_hotels(driver, amount)
+        final_hotels_data = scrap_hotels(driver, 200)
         print(final_hotels_data)
         # Store the values in a file
-        with open('booking_data.json', 'w') as f:
+        with open('hotel3.json', 'w') as f:
             f.write(str(final_hotels_data))
     finally:
         driver.quit()
