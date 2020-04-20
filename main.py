@@ -4,6 +4,8 @@ import string
 from pathlib import Path
 import os
 from booking_data import hotel_data
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
 
 # Fetching the link to the json data
