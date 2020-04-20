@@ -267,9 +267,10 @@ if __name__ == '__main__':
         search_hotels(driver, location)
         # Call the function to scrape the details of the above fetched hotels
         final_hotels_data = scrap_hotels(driver, 200)
+        final_hotels_data = json.dumps(final_hotels_data, indent=4)
         print(final_hotels_data)
         # Store the values in a file
         with open('hotel3.json', 'w') as f:
-            f.write(str(final_hotels_data))
+            f.write(final_hotels_data)
     finally:
         driver.quit()
