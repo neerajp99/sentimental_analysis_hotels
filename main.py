@@ -8,21 +8,27 @@ from nltk.corpus import stopwords
 import pandas as pd
 import numpy as np
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import statistics
+import csv
 
 #Fetching the link to the json data
 # Path(__file__).parent.absolute() 
 current_path = str(Path().absolute())
-link_to_data = current_path + "/data/bangkok.json"
+link_to_data = current_path + "/data/kuala_lumpur.json"
+
+# Final and initial score array 
+checkout_array = list()
 
 #Reading json/csv file with all the data 
 with open(link_to_data) as f:
-  data_content = json.loads(f.read())
+    data_content = json.loads(f.read())
 for j in range(len(data_content)):
     sums = 0
-    for i in range(1, 101, 1):
+    temp_list = list()
+    for k in data_content[j]['reviews']:
         # print(data_content[0]['reviews']['R' + str(i)]['content'])
         # print('\n\n')
-        current_review = data_content[j]['reviews']['R' + str(i)]['content']
+        current_review = data_content[j]['reviews'][k]['content']
         # Convert any uppercase letter to lowercase
         current_review = current_review.lower()
         # Remove any special character from the review comments 
@@ -46,5 +52,26 @@ for j in range(len(data_content)):
             return compound
 
         total = analyse_sentiment(review_comments)
-        sums += abs(total)
-    print("Final Rating of the hotel: ", round(sums/10, 3))
+        # print(abs(total))
+        # sums += abs(total)
+        # Append the compound
+        temp_list.append(abs(total))
+    
+    # print(temp_list)
+    # print(data_content[j]['score'])
+    # print(statistics.median(temp_list) * 10)
+    checkout_array.append([float(data_content[j]['score']), statistics.median(temp_list) * 10])
+    
+    # print("Final Rating of the hotel: ", sums/len(data_content[j]['reviews']))
+print(checkout_array)
+# Saving the data to a json file
+bangkok_final = json.dumps(checkout_array, indent = 4)
+with open ('kuala_lumpur.json', 'w') as f:
+    f.write(bangkok_final)
+# Saving data to a csv file 
+with open('kuala_lumpur.csv', 'w', newline='') as myfile:
+    header_names = ["V!", "V2"]
+    wr = csv.writer(myfile)
+    wr.writerows(checkout_array)
+# data = np.array(checkout_array)
+# np.savetxt("bangkok_final.csv", data, delimiter=",")
