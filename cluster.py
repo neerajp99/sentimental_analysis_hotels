@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from pathlib import Path
 
 
 class k_means_cluster:
@@ -61,7 +62,11 @@ class k_means_cluster:
         return classification 
         
 def main():
-    dataFrame = pd.read_csv("kmeans.csv")
+    #Fetching the link to the json data
+    # Path(__file__).parent.absolute() 
+    current_path = str(Path().absolute())
+    link_to_data = current_path + "/final_visual_data/singapore.csv"
+    dataFrame = pd.read_csv("bangkok_final.csv")
     dataFrame = dataFrame[['V1', 'V2']]
     # return pandas data
     data = dataFrame.values
@@ -80,9 +85,11 @@ def main():
     for classification in k_means.classifications:
         color = colors[classification]
         for features in k_means.classifications[classification]:
-            plt.scatter(features[0], features[1], color = color, s = 2)
+            plt.scatter(features[0], features[1], color = color, s = 25)
+    plt.gcf().set_size_inches((10, 10)) 
+    plt.title('Bangkok', color="white", fontsize= 20)
     plt.show()
     
 if __name__ == "__main__":
-	main()
+    main()
         
