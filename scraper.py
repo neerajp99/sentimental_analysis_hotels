@@ -88,7 +88,7 @@ def scrap_hotels(driver, max_count):
         else:
             print("No data received for the given url")
 
-        if break_counter == 20:
+        if break_counter == 4:
             break
 
     # Return the final hotels data list items
