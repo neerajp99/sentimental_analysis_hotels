@@ -69,3 +69,13 @@
 .marker_icon{
     height: 3vh !important;
 }
+.pop-up > h2{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px
+}
+.pop-up > h3{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    width: 90%;
+    margin: 0 auto;
+}
