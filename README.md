@@ -1,4 +1,3 @@
 # sentimental_analysis_hotels
-Mine Data and Performing Sentimental Analysis with Visualisations
+Mining Data and Performing Sentimental Analysis with Visualisations for CS-2376 @ Ashoka University
 
-*work in progress 
