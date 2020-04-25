@@ -27,11 +27,11 @@ checkout_hotel_initial_details_array.sort()
 print(checkout_hotel_initial_details_array)
 
 # Saving the top 10 hotels data to json
-singapore_hotel_final = json.dumps(checkout_hotel_initial_details_array[: 10], indent = 4)
+singapore_hotel_final = json.dumps(checkout_hotel_initial_details_array[10: ], indent = 4)
 with open ('singapore_initial_details.json', 'w') as f:
     f.write(kuala_lumpur_hotel_final)
 # Saving the top 10 hotels data to csv
 with open('singapore_initial_details.csv', 'w', newline='') as myfile:
     header_names = ["V1", "V2"]
     wr = csv.writer(myfile)
-    wr.writerows(checkout_hotel_initial_details_array[: 10])
+    wr.writerows(checkout_hotel_initial_details_array[10: ])
