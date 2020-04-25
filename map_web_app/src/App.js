@@ -4,15 +4,17 @@ import mapboxgl from "mapbox-gl";
 // Bring in react wrapper for mapbox
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 // Bring in map data
-import * as hotelsData from "./check_data.json";
+// import * as hotelsData from "./data/initial/bangkok.json";
+// import * as hotelsData from "./check_data.json";
 // Bring in marker icon
 import marker from "./marker.png";
+const hotelsData = require("./data/initial/kuala_lumpur.json"); //with path
 
 function App() {
   // Initialse viewport state
   const [viewport, setViewport] = useState({
-    latitude: 45.4211,
-    longitude: -75.6903,
+    latitude: 3.1385036,
+    longitude: 101.6169493,
     width: "100vw",
     height: "100vh",
     zoom: 10
@@ -24,7 +26,7 @@ function App() {
   // Use useEffect hook
   useEffect(() => {
     // Check the updated viewport
-    console.log(viewport);
+    // console.log(viewport);
 
     const listener = event => {
       if (event.key === "Escape") {
@@ -47,11 +49,11 @@ function App() {
           setViewport(viewport);
         }}
       >
-        {hotelsData.features.map(hotel => (
+        {hotelsData.map((hotel, index) => (
           <Marker
-            key={hotel.properties.PARK_ID}
-            latitude={hotel.geometry.coordinates[1]}
-            longitude={hotel.geometry.coordinates[0]}
+            key={index}
+            latitude={parseFloat(hotel[2][0])}
+            longitude={parseFloat(hotel[2][1])}
           >
             <img
               src={marker}
@@ -67,13 +69,16 @@ function App() {
 
         {checkedHotel ? (
           <Popup
-            latitude={checkedHotel.geometry.coordinates[1]}
-            longitude={checkedHotel.geometry.coordinates[0]}
+            latitude={parseFloat(checkedHotel[2][0])}
+            longitude={parseFloat(checkedHotel[2][1])}
             onClose={() => {
               setCheckedHotel(null);
             }}
           >
-            <div>Hello world</div>
+            <div className="pop-up">
+              <h2>{checkedHotel[0]}</h2>
+              <h3>{checkedHotel[1]}</h3>
+            </div>
           </Popup>
         ) : null}
       </ReactMapGL>
