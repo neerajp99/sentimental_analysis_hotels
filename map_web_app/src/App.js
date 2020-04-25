@@ -8,13 +8,13 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 // import * as hotelsData from "./check_data.json";
 // Bring in marker icon
 import marker from "./marker.png";
-const hotelsData = require("./data/initial/kuala_lumpur.json"); //with path
+const hotelsData = require("./data/polarity/bangkok.json"); //with path
 
 function App() {
   // Initialse viewport state
   const [viewport, setViewport] = useState({
-    latitude: 3.1385036,
-    longitude: 101.6169493,
+    latitude: 13.7245601,
+    longitude: 100.4930261,
     width: "100vw",
     height: "100vh",
     zoom: 10
@@ -52,8 +52,8 @@ function App() {
         {hotelsData.map((hotel, index) => (
           <Marker
             key={index}
-            latitude={parseFloat(hotel[2][0])}
-            longitude={parseFloat(hotel[2][1])}
+            latitude={parseFloat(hotel[2])}
+            longitude={parseFloat(hotel[3])}
           >
             <img
               src={marker}
@@ -69,8 +69,8 @@ function App() {
 
         {checkedHotel ? (
           <Popup
-            latitude={parseFloat(checkedHotel[2][0])}
-            longitude={parseFloat(checkedHotel[2][1])}
+            latitude={parseFloat(checkedHotel[2])}
+            longitude={parseFloat(checkedHotel[3])}
             onClose={() => {
               setCheckedHotel(null);
             }}
